@@ -1,7 +1,7 @@
-import { Hash, MessageSquare, Users } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-
+import { Hash, MessageSquare, Users } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { useAuthStore } from "@/store";
 interface Channel {
   id: string;
   name: string;
@@ -14,18 +14,21 @@ interface DirectMessage {
 }
 
 const channels: Channel[] = [
-  { id: '1', name: 'general' },
-  { id: '2', name: 'random' },
-  { id: '3', name: 'announcements' },
+  { id: "1", name: "general" },
+  { id: "2", name: "random" },
+  { id: "3", name: "announcements" },
 ];
 
 const directMessages: DirectMessage[] = [
-  { id: '1', name: 'Sarah Johnson', online: true },
-  { id: '2', name: 'Mike Chen', online: false },
-  { id: '3', name: 'Alex Kim', online: true },
+  { id: "1", name: "Sarah Johnson", online: true },
+  { id: "2", name: "Mike Chen", online: false },
+  { id: "3", name: "Alex Kim", online: true },
 ];
 
 export function Sidebar() {
+  const user = useAuthStore((state) => state.user);
+  const setChannel = useAuthStore((state) => state.setChannel);
+  console.log(user);
   return (
     <div className="w-64 bg-zinc-900 h-screen flex flex-col">
       <div className="p-4">
@@ -38,13 +41,16 @@ export function Sidebar() {
               <MessageSquare className="mr-2 h-4 w-4" />
               Channels
             </h3>
-            {channels.map((channel) => (
+            {user?.connectedChannels["group"].map((channel) => (
               <button
-                key={channel.id}
+                key={channel.channel_id}
                 className="flex items-center w-full px-2 py-1 text-zinc-400 hover:bg-zinc-800 rounded"
+                onClick={() => {
+                  setChannel(channel.channel_id);
+                }}
               >
                 <Hash className="mr-2 h-4 w-4" />
-                {channel.name}
+                {channel.channel_name}
               </button>
             ))}
           </div>
@@ -54,22 +60,25 @@ export function Sidebar() {
               <Users className="mr-2 h-4 w-4" />
               Direct Messages
             </h3>
-            {directMessages.map((dm) => (
+            {user?.connectedChannels["dm"].map((dm) => (
               <button
-                key={dm.id}
+                key={dm.channel_id}
                 className="flex items-center w-full px-2 py-1 text-zinc-400 hover:bg-zinc-800 rounded"
+                onClick={() => {
+                  setChannel(dm.channel_id);
+                }}
               >
                 <div className="relative mr-2">
                   <div className="w-2 h-2 rounded-full absolute -right-1 -bottom-1 bg-zinc-900">
                     <div
                       className={`w-1.5 h-1.5 rounded-full ${
-                        dm.online ? 'bg-green-500' : 'bg-zinc-500'
+                        dm.online ? "bg-green-500" : "bg-zinc-500"
                       }`}
                     />
                   </div>
                   <div className="w-4 h-4 bg-zinc-700 rounded-full" />
                 </div>
-                {dm.name}
+                {dm.channel_name}
               </button>
             ))}
           </div>

@@ -1,0 +1,28 @@
+{
+  "name": "edge_server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./build/index.js",
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:run": "nodemon ./build/index.js",
+    "start": "concurrently npm:start:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.3",
+    "@types/socket.io": "^3.0.2",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "edge_server": "file:",
+    "express": "^4.21.2",
+    "http": "^0.0.1-security",
+    "nodemon": "^3.1.9",
+    "socket.io": "^4.8.1"
+  }
+}
